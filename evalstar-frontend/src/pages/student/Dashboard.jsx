@@ -286,234 +286,239 @@ const StudentDashboard = () => {
       
       {stats && (
         <Grid container spacing={4}>
-          {/* Carte d'informations étudiant */}
-          <Grid item xs={12} md={4}>
-            <Paper elevation={3} sx={{ p: 3, height: '100%', borderRadius: 3 }}>
-              <Box sx={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center', 
-                mb: 2 
-              }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <PersonIcon sx={{ mr: 1, color: 'primary.main' }} />
-                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                    Mes Informations
+          {/* Section principale avec informations et statistiques */}
+          <Grid item xs={12}>
+            <Grid container spacing={4}>
+              {/* Carte d'informations étudiant */}
+              <Grid item xs={12} lg={4}>
+                <Paper elevation={3} sx={{ p: 3, height: 'fit-content', borderRadius: 3 }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center', 
+                    mb: 2 
+                  }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <PersonIcon sx={{ mr: 1, color: 'primary.main' }} />
+                      <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                        Mes Informations
+                      </Typography>
+                    </Box>
+                    <Tooltip title="Modifier le Profil">
+                      <IconButton 
+                        color="primary" 
+                        size="small" 
+                        onClick={handleEditClick}
+                        aria-label="modifier le profil"
+                        sx={{ 
+                          bgcolor: 'primary.50',
+                          '&:hover': { bgcolor: 'primary.100' }
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                  <Divider sx={{ mb: 3 }} />
+                  
+                  <Box sx={{ textAlign: 'center', mb: 3 }}>
+                    <Avatar sx={{ 
+                      width: 80, 
+                      height: 80, 
+                      bgcolor: 'primary.main',
+                      mx: 'auto',
+                      mb: 2,
+                      fontSize: '2rem'
+                    }}>
+                      {stats.student.first_name?.charAt(0)}{stats.student.last_name?.charAt(0)}
+                    </Avatar>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                      {stats.student.first_name} {stats.student.last_name}
+                    </Typography>
+                  </Box>
+
+                  <List dense>
+                    <ListItem sx={{ px: 0 }}>
+                      <ListItemText 
+                        primary={
+                          <Typography variant="subtitle2" color="text.secondary">
+                            CNE
+                          </Typography>
+                        }
+                        secondary={
+                          <Chip 
+                            label={stats.student.cne} 
+                            size="small" 
+                            variant="outlined" 
+                            color="primary"
+                          />
+                        }
+                      />
+                    </ListItem>
+                    <ListItem sx={{ px: 0 }}>
+                      <ListItemText 
+                        primary={
+                          <Typography variant="subtitle2" color="text.secondary">
+                            Niveau/Groupe
+                          </Typography>
+                        }
+                        secondary={
+                          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                            <Chip 
+                              label={stats.student.level?.name || 'N/A'} 
+                              size="small" 
+                              color="secondary"
+                            />
+                            <Chip 
+                              label={`Groupe ${stats.student.group?.group_number || 'N/A'}`} 
+                              size="small" 
+                              variant="outlined"
+                            />
+                          </Box>
+                        }
+                      />
+                    </ListItem>
+                  </List>
+                </Paper>
+              </Grid>
+
+              {/* Cartes de statistiques */}
+              <Grid item xs={12} lg={8}>
+                <Grid container spacing={3} sx={{ height: 'fit-content' }}>
+                  <Grid item xs={12} sm={4}>
+                    <StatCard
+                      title="Évaluations Terminées"
+                      value={stats.completed_tasks}
+                      icon={<AssignmentIcon sx={{ fontSize: 32 }} />}
+                      color="primary"
+                      bgColor="#e3f2fd"
+                    />
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={4}>
+                    <StatCard
+                      title="Total des Étoiles"
+                      value={stats.total_stars}
+                      icon={<StarIcon sx={{ fontSize: 32 }} />}
+                      color="warning"
+                      bgColor="#fff8e1"
+                    />
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={4}>
+                    <StatCard
+                      title="Classement"
+                      value={`${stats.class_ranking.student_rank}/${stats.class_ranking.total_students}`}
+                      icon={<TrophyIcon sx={{ fontSize: 32 }} />}
+                      color="success"
+                      bgColor="#e8f5e9"
+                      subtitle={`Top ${Math.round((stats.class_ranking.student_rank / stats.class_ranking.total_students) * 100)}%`}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          {/* Progression visuelle */}
+          <Grid item xs={12}>
+            <Paper sx={{ p: 3, borderRadius: 3, boxShadow: 2 }}>
+              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', mb: 2 }}>
+                📊 Votre Progression
+              </Typography>
+              <Box sx={{ mb: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Position dans la classe
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                    {stats.class_ranking.student_rank} / {stats.class_ranking.total_students}
                   </Typography>
                 </Box>
-                <Tooltip title="Modifier le Profil">
-                  <IconButton 
-                    color="primary" 
-                    size="small" 
-                    onClick={handleEditClick}
-                    aria-label="modifier le profil"
-                    sx={{ 
-                      bgcolor: 'primary.50',
-                      '&:hover': { bgcolor: 'primary.100' }
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Tooltip>
+                <LinearProgress 
+                  variant="determinate" 
+                  value={100 - ((stats.class_ranking.student_rank - 1) / (stats.class_ranking.total_students - 1)) * 100}
+                  sx={{ 
+                    height: 8, 
+                    borderRadius: 4,
+                    bgcolor: 'grey.200',
+                    '& .MuiLinearProgress-bar': {
+                      borderRadius: 4,
+                      bgcolor: 'success.main'
+                    }
+                  }}
+                />
               </Box>
-              <Divider sx={{ mb: 3 }} />
-              
-              <Box sx={{ textAlign: 'center', mb: 3 }}>
-                <Avatar sx={{ 
-                  width: 80, 
-                  height: 80, 
-                  bgcolor: 'primary.main',
-                  mx: 'auto',
-                  mb: 2,
-                  fontSize: '2rem'
-                }}>
-                  {stats.student.first_name?.charAt(0)}{stats.student.last_name?.charAt(0)}
-                </Avatar>
-                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                  {stats.student.first_name} {stats.student.last_name}
-                </Typography>
-              </Box>
-
-              <List dense>
-                <ListItem sx={{ px: 0 }}>
-                  <ListItemText 
-                    primary={
-                      <Typography variant="subtitle2" color="text.secondary">
-                        CNE
-                      </Typography>
-                    }
-                    secondary={
-                      <Chip 
-                        label={stats.student.cne} 
-                        size="small" 
-                        variant="outlined" 
-                        color="primary"
-                      />
-                    }
-                  />
-                </ListItem>
-                <ListItem sx={{ px: 0 }}>
-                  <ListItemText 
-                    primary={
-                      <Typography variant="subtitle2" color="text.secondary">
-                        Niveau/Groupe
-                      </Typography>
-                    }
-                    secondary={
-                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                        <Chip 
-                          label={stats.student.level?.name || 'N/A'} 
-                          size="small" 
-                          color="secondary"
-                        />
-                        <Chip 
-                          label={`Groupe ${stats.student.group?.group_number || 'N/A'}`} 
-                          size="small" 
-                          variant="outlined"
-                        />
-                      </Box>
-                    }
-                  />
-                </ListItem>
-              </List>
             </Paper>
           </Grid>
 
-          {/* Cartes de statistiques améliorées */}
-          <Grid item xs={12} md={8}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={4}>
-                <StatCard
-                  title="Évaluations Terminées"
-                  value={stats.completed_tasks}
-                  icon={<AssignmentIcon sx={{ fontSize: 32 }} />}
-                  color="primary"
-                  bgColor="#e3f2fd"
-                />
-              </Grid>
+          {/* Évaluations récentes */}
+          <Grid item xs={12}>
+            <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
+              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', mb: 2 }}>
+                🏆 Évaluations Récemment Terminées
+              </Typography>
+              <Divider sx={{ mb: 3 }} />
               
-              <Grid item xs={12} sm={4}>
-                <StatCard
-                  title="Total des Étoiles"
-                  value={stats.total_stars}
-                  icon={<StarIcon sx={{ fontSize: 32 }} />}
-                  color="warning"
-                  bgColor="#fff8e1"
-                />
-              </Grid>
-              
-              <Grid item xs={12} sm={4}>
-                <StatCard
-                  title="Classement"
-                  value={`${stats.class_ranking.student_rank}/${stats.class_ranking.total_students}`}
-                  icon={<TrophyIcon sx={{ fontSize: 32 }} />}
-                  color="success"
-                  bgColor="#e8f5e9"
-                  subtitle={`Top ${Math.round((stats.class_ranking.student_rank / stats.class_ranking.total_students) * 100)}%`}
-                />
-              </Grid>
-
-              {/* Progression visuelle */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 3, borderRadius: 3, boxShadow: 2 }}>
-                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', mb: 2 }}>
-                    📊 Votre Progression
-                  </Typography>
-                  <Box sx={{ mb: 2 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        Position dans la classe
-                      </Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                        {stats.class_ranking.student_rank} / {stats.class_ranking.total_students}
-                      </Typography>
-                    </Box>
-                    <LinearProgress 
-                      variant="determinate" 
-                      value={100 - ((stats.class_ranking.student_rank - 1) / (stats.class_ranking.total_students - 1)) * 100}
-                      sx={{ 
-                        height: 8, 
-                        borderRadius: 4,
-                        bgcolor: 'grey.200',
-                        '& .MuiLinearProgress-bar': {
-                          borderRadius: 4,
-                          bgcolor: 'success.main'
+              {stats.recent_tasks && stats.recent_tasks.length > 0 ? (
+                <Grid container spacing={3}>
+                  {stats.recent_tasks.map((task) => (
+                    <Grid item xs={12} md={4} key={task.id}>
+                      <Card sx={{ 
+                        height: '100%',
+                        borderRadius: 2,
+                        transition: 'transform 0.2s, box-shadow 0.2s',
+                        '&:hover': { 
+                          transform: 'translateY(-4px)',
+                          boxShadow: 4
                         }
-                      }}
-                    />
-                  </Box>
-                </Paper>
-              </Grid>
-
-              {/* Évaluations récentes */}
-              <Grid item xs={12}>
-                <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
-                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', mb: 2 }}>
-                    🏆 Évaluations Récemment Terminées
-                  </Typography>
-                  <Divider sx={{ mb: 3 }} />
-                  
-                  {stats.recent_tasks && stats.recent_tasks.length > 0 ? (
-                    <Grid container spacing={3}>
-                      {stats.recent_tasks.map((task) => (
-                        <Grid item xs={12} md={4} key={task.id}>
-                          <Card sx={{ 
-                            height: '100%',
-                            borderRadius: 2,
-                            transition: 'transform 0.2s, box-shadow 0.2s',
-                            '&:hover': { 
-                              transform: 'translateY(-4px)',
-                              boxShadow: 4
-                            }
-                          }}>
-                            <CardContent sx={{ pb: 1 }}>
-                              <Typography variant="h6" noWrap gutterBottom sx={{ fontWeight: 'bold' }}>
-                                {task.task?.title || 'Évaluation Sans Titre'}
-                              </Typography>
-                              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                <Box sx={{ mr: 1 }}>
-                                  {getStarIcons(task.stars_earned, task.task?.max_stars || 5)}
-                                </Box>
-                                <Chip 
-                                  label={`${task.stars_earned}/${task.task?.max_stars || 5}`}
-                                  size="small"
-                                  color="warning"
-                                  variant="outlined"
-                                />
-                              </Box>
-                              <Typography variant="body2" color="text.secondary">
-                                ✅ Terminée: {formatDate(task.completion_date)}
-                              </Typography>
-                            </CardContent>
-                            <CardActions sx={{ pt: 0 }}>
-                              <Button 
-                                size="small" 
-                                variant="outlined"
-                                onClick={() => navigate(`/student/tasks/${task.task_id}`)}
-                                sx={{ borderRadius: 2 }}
-                              >
-                                Voir les Détails
-                              </Button>
-                            </CardActions>
-                          </Card>
-                        </Grid>
-                      ))}
+                      }}>
+                        <CardContent sx={{ pb: 1 }}>
+                          <Typography variant="h6" noWrap gutterBottom sx={{ fontWeight: 'bold' }}>
+                            {task.task?.title || 'Évaluation Sans Titre'}
+                          </Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                            <Box sx={{ mr: 1 }}>
+                              {getStarIcons(task.stars_earned, task.task?.max_stars || 5)}
+                            </Box>
+                            <Chip 
+                              label={`${task.stars_earned}/${task.task?.max_stars || 5}`}
+                              size="small"
+                              color="warning"
+                              variant="outlined"
+                            />
+                          </Box>
+                          <Typography variant="body2" color="text.secondary">
+                            ✅ Terminée: {formatDate(task.completion_date)}
+                          </Typography>
+                        </CardContent>
+                        <CardActions sx={{ pt: 0 }}>
+                          <Button 
+                            size="small" 
+                            variant="outlined"
+                            onClick={() => navigate(`/student/tasks/${task.task_id}`)}
+                            sx={{ borderRadius: 2 }}
+                          >
+                            Voir les Détails
+                          </Button>
+                        </CardActions>
+                      </Card>
                     </Grid>
-                  ) : (
-                    <Box sx={{ 
-                      textAlign: 'center', 
-                      py: 4,
-                      color: 'text.secondary'
-                    }}>
-                      <AssignmentIcon sx={{ fontSize: 48, mb: 1, opacity: 0.5 }} />
-                      <Typography variant="body1">
-                        Aucune évaluation récemment terminée.
-                      </Typography>
-                    </Box>
-                  )}
-                </Paper>
-              </Grid>
-            </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Box sx={{ 
+                  textAlign: 'center', 
+                  py: 4,
+                  color: 'text.secondary'
+                }}>
+                  <AssignmentIcon sx={{ fontSize: 48, mb: 1, opacity: 0.5 }} />
+                  <Typography variant="body1">
+                    Aucune évaluation récemment terminée.
+                  </Typography>
+                </Box>
+              )}
+            </Paper>
           </Grid>
 
           {/* Boutons d'action améliorés */}
